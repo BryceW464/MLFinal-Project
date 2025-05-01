@@ -4,7 +4,7 @@ from sklearn.metrics import accuracy_score
 
 def load_dataset(filename, label):
     dataframe = pd.read_csv(filename)
-    dataframe.drop(columns=[0,1,4], inplace=True)
+    dataframe.drop(columns=[0, 1, 4], axis=1, inplace=True)
 
     dataframe['label'] = label
 
