@@ -1,27 +1,28 @@
 import pandas as pd
 from sklearn.naive_bayes import GaussianNB
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-#Loading data
-#column 35 for label
-benignTrainingData = pd.read_csv("l2-benign_training.csv")
-maliciousTrainingData = pd.read_csv("l2-malicious_training.csv")
-benignTestingData = pd.read_csv("l2-benign_testing.csv")
-maliciousTestingData = pd.read_csv("l2-malicious_testing.csv")
+def load_dataset(filename, label):
+    dataframe = pd.read_csv(filename)
+    dataframe.drop(columns=[0,1,4], inplace=True)
 
-benignTrainingData['label'] = 0
-maliciousTrainingData['label'] = 1
-benignTestingData['label'] = 0
-maliciousTestingData['label'] = 1
+    dataframe['label'] = label
 
-combinedTrainingData = pd.concat([benignTrainingData, maliciousTrainingData], ignore_index=True)
-combinedTestingData = pd.concat([benignTestingData, maliciousTestingData], ignore_index=True)
+    return dataframe
 
-X_train = combinedTrainingData.drop(columns=[combinedTrainingData.columns[-1]])
-y_train = combinedTrainingData[combinedTrainingData[combinedTrainingData].columns[-1]]
-X_test = combinedTestingData.drop(columns=[combinedTestingData.columns[-1]])
-y_test = combinedTestingData[combinedTestingData.columns[-1]]
+
+benignTrainingData = load_dataset("l2-benign_training.csv", 0)
+maliciousTrainingData = load_dataset("l2-malicious_training.csv", 1)
+benignTestingData = load_dataset("l2-benign_testing.csv", 0)
+maliciousTestingData = load_dataset("l2-malicious_testing.csv", 1)
+
+combinedTrainingData = pd.concat([benignTrainingData, maliciousTrainingData])
+combinedTestingData = pd.concat([benignTestingData, maliciousTestingData])
+
+X_train = combinedTrainingData.drop(columns=['label'])
+y_train = combinedTrainingData['label']
+X_test = combinedTestingData.drop(columns=['label'])
+y_test = combinedTestingData['label']
 
 gnb_model = GaussianNB()
 gnb_model.fit(X_train, y_train)
