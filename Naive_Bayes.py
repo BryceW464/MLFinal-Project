@@ -4,12 +4,13 @@ from sklearn.metrics import accuracy_score
 
 def load_dataset(filename, label):
     dataframe = pd.read_csv(filename)
-    dataframe.drop(columns=[0, 1, 4], axis=1, inplace=True)
+    dataframe.drop(dataframe.columns[[0, 1, 4, 34]], axis=1, inplace=True)
 
     dataframe['label'] = label
 
-    return dataframe
+    dataframe.dropna(inplace=True)
 
+    return dataframe
 
 benignTrainingData = load_dataset("l2-benign_training.csv", 0)
 maliciousTrainingData = load_dataset("l2-malicious_training.csv", 1)
@@ -29,6 +30,7 @@ gnb_model.fit(X_train, y_train)
 
 y_prediction = gnb_model.predict(X_test)
 
+confusionMatrix = (y_test, y_prediction)
 accuracy = accuracy_score(y_test, y_prediction)
 
 print(f"accuracy: {accuracy}")
