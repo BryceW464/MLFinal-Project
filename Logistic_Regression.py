@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix
+from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import shuffle
 from sklearn.linear_model import LogisticRegression
@@ -49,6 +49,7 @@ def main():
     acc = accuracy_score(y_test, pred)
     recall = recall_score(y_test, pred)
     precision = precision_score(y_test, pred)
+    f1Score = f1_score(y_test, pred)
 
     confusionMatrix = confusion_matrix(y_test, pred)
     confusionMatrixDF = pd.DataFrame(confusionMatrix, index=["Actual Benign", "Actual Malicious"], columns=["Predicted Benign", "Predicted Malicious"])
@@ -57,5 +58,6 @@ def main():
     print (f"Recall: {recall}")
     print (f"Precision: {precision}")
     print("Confusion Matrix" +str(confusionMatrixDF))
+    print("F1 Score: " + str(f1Score))
 
 main()

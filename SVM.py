@@ -3,7 +3,7 @@ from sklearn import svm
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import GridSearchCV
 from sklearn.utils import shuffle
-from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix
+from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score
 
 '''
 -# Loads in the datasets and puts them into a pandas dataframe, clears all "NaN" values
@@ -108,11 +108,13 @@ def statistics(svm_model, test_data, test_labels):
     accuracy = accuracy_score(test_labels, y_prediction)
     recall = recall_score(test_labels, y_prediction)
     precision = precision_score(test_labels, y_prediction)
+    f1Score = f1_score(test_labels, y_prediction)
 
     print(f"accuracy: {accuracy}")
     print(f"recall: {recall}")
     print(f"precision: {precision}\n")
     print("Confusion Matrix" + str(confusionMatrixDF))
+    print("F1 Score: " + str(f1Score))
 
 
 def main():

@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix
+from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score
 
 def load_dataset(filename, label):
     dataframe = pd.read_csv(filename)
@@ -35,8 +35,10 @@ confusionMatrixDF = pd.DataFrame(confusionMatrix, index=["Actual Benign", "Actua
 accuracy = accuracy_score(y_test, y_prediction)
 recall = recall_score(y_test, y_prediction)
 precision = precision_score(y_test, y_prediction)
+f1Score = f1_score(y_test,y_prediction)
 
 print(f"accuracy: {accuracy}")
 print(f"recall: {recall}")
 print(f"precision: {precision}")
 print("Confusion Matrix" + str(confusionMatrixDF))
+print("F1 Score: " + str(f1Score))
