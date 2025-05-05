@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import shuffle
@@ -39,19 +40,23 @@ def format_data(benign, benignTest, Malicious, MaliciousTest):
     X_test_scaled = scaler.transform(X_test_shuffled)
 
     return X_train_scaled, y_train_shuffled, X_test_scaled, y_test_shuffled
+    #return X_train_shuffled, y_train_shuffled, X_test_shuffled, y_test_shuffled
 
 def main():
     X_train, y_train, X_test, y_test = format_data("l2-benign_training.csv", "l2-malicious_training.csv", "l2-benign_testing.csv", "l2-malicious_testing.csv")
 
     log_reg = LogisticRegression(max_iter=10000)
+    start = time.perf_counter()
     log_reg.fit(X_train, y_train)
+    end = time.perf_counter()
 
     pred = log_reg.predict(X_test)
+    
 
     acc = accuracy_score(y_test, pred)
     recall = recall_score(y_test, pred)
     precision = precision_score(y_test, pred)
-    f1Score = f1_score(y_test, pred)
+    f1score = f1_score(y_test, pred)
 
     confusionMatrix = confusion_matrix(y_test, pred)
     confusionMatrixDF = pd.DataFrame(confusionMatrix, index=["Actual Benign", "Actual Malicious"], columns=["Predicted Benign", "Predicted Malicious"])
@@ -59,8 +64,38 @@ def main():
     print (f"Accuracy: {acc}")
     print (f"Recall: {recall}")
     print (f"Precision: {precision}")
+    print (f"F-1 Score:  {f1score}")
     print("Confusion Matrix" +str(confusionMatrixDF))
-    print("F1 Score: " + str(f1Score))
+
+    # Plot confusion matrix
+    fig, ax = plt.subplots(figsize=(6, 4))
+    cax = ax.matshow(confusionMatrix, cmap='Blues')  # Creates the matrix with color
+    fig.colorbar(cax)  # Adds a color bar to the side
+    ax.set_xticks(np.arange(2))
+    ax.set_yticks(np.arange(2))
+    ax.set_xticklabels(["Predicted Benign", "Predicted Malicious"])
+    ax.set_yticklabels(["Actual Benign", "Actual Malicious"])
+
+    # Rotate the tick labels and set their alignment.
+    plt.xticks(rotation=45)
+    plt.ylabel('Actual')
+    plt.xlabel('Predicted')
+    plt.title('Confusion Matrix')
+    plt.show()
+
+    # Plotting the other metrics (Accuracy, Recall, Precision, F1 Score)
+    metrics = {'Accuracy': acc, 'Recall': recall, 'Precision': precision, 'F1 Score': f1Score}
+    
+    # Set the Y-axis range between 0.90 and 1.00 for the classification metrics
+    plt.figure(figsize=(8, 6))
+    plt.bar(metrics.keys(), metrics.values(), color=['skyblue', 'lightgreen', 'lightcoral', 'lightskyblue'])
+    plt.title("Classification Metrics")
+    plt.ylabel("Score")
+    plt.ylim(0.95, 1.00) 
+
+    plt.yticks(np.arange(0.95, 1.00, 0.005))
+
+    plt.show()
 
     # Plot confusion matrix
     fig, ax = plt.subplots(figsize=(6, 4))
