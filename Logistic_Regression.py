@@ -1,4 +1,6 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 import time
 from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score
 from sklearn.preprocessing import StandardScaler
@@ -85,5 +87,65 @@ def main():
     print (f"Precision: {precision}")
     print (f"F-1 Score:  {f1score}")
     print("Confusion Matrix" +str(confusionMatrixDF))
+
+    # Plot confusion matrix
+    fig, ax = plt.subplots(figsize=(6, 4))
+    cax = ax.matshow(confusionMatrix, cmap='Blues')  # Creates the matrix with color
+    fig.colorbar(cax)  # Adds a color bar to the side
+    ax.set_xticks(np.arange(2))
+    ax.set_yticks(np.arange(2))
+    ax.set_xticklabels(["Predicted Benign", "Predicted Malicious"])
+    ax.set_yticklabels(["Actual Benign", "Actual Malicious"])
+
+    # Rotate the tick labels and set their alignment.
+    plt.xticks(rotation=45)
+    plt.ylabel('Actual')
+    plt.xlabel('Predicted')
+    plt.title('Confusion Matrix')
+    plt.show()
+
+    # Plotting the other metrics (Accuracy, Recall, Precision, F1 Score)
+    metrics = {'Accuracy': acc, 'Recall': recall, 'Precision': precision, 'F1 Score': f1Score}
+    
+    # Set the Y-axis range between 0.90 and 1.00 for the classification metrics
+    plt.figure(figsize=(8, 6))
+    plt.bar(metrics.keys(), metrics.values(), color=['skyblue', 'lightgreen', 'lightcoral', 'lightskyblue'])
+    plt.title("Classification Metrics")
+    plt.ylabel("Score")
+    plt.ylim(0.95, 1.00) 
+
+    plt.yticks(np.arange(0.95, 1.00, 0.005))
+
+    plt.show()
+
+    # Plot confusion matrix
+    fig, ax = plt.subplots(figsize=(6, 4))
+    cax = ax.matshow(confusionMatrix, cmap='Blues')  # Creates the matrix with color
+    fig.colorbar(cax)  # Adds a color bar to the side
+    ax.set_xticks(np.arange(2))
+    ax.set_yticks(np.arange(2))
+    ax.set_xticklabels(["Predicted Benign", "Predicted Malicious"])
+    ax.set_yticklabels(["Actual Benign", "Actual Malicious"])
+
+    # Rotate the tick labels and set their alignment.
+    plt.xticks(rotation=45)
+    plt.ylabel('Actual')
+    plt.xlabel('Predicted')
+    plt.title('Confusion Matrix')
+    plt.show()
+
+    # Plotting the other metrics (Accuracy, Recall, Precision, F1 Score)
+    metrics = {'Accuracy': acc, 'Recall': recall, 'Precision': precision, 'F1 Score': f1Score}
+    
+    # Set the Y-axis range between 0.90 and 1.00 for the classification metrics
+    plt.figure(figsize=(8, 6))
+    plt.bar(metrics.keys(), metrics.values(), color=['skyblue', 'lightgreen', 'lightcoral', 'lightskyblue'])
+    plt.title("Classification Metrics")
+    plt.ylabel("Score")
+    plt.ylim(0.95, 1.00) 
+
+    plt.yticks(np.arange(0.95, 1.00, 0.005))
+
+    plt.show()
 
 main()
