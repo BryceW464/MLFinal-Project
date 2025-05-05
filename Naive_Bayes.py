@@ -4,21 +4,26 @@ import numpy as np
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score
 
+#Loads the data from the csv file into a pandas dataframe
 def load_dataset(filename, label):
     dataframe = pd.read_csv(filename)
+    #Drops the IP, timestamp, and label features
     dataframe.drop(dataframe.columns[[0, 1, 4, 34]], axis=1, inplace=True)
 
     dataframe['label'] = label
 
+    #Drops any rows that have a null value
     dataframe.dropna(inplace=True)
 
     return dataframe
 
+#Load all respective datasets
 benignTrainingData = load_dataset("l2-benign_training.csv", 0)
 maliciousTrainingData = load_dataset("l2-malicious_training.csv", 1)
 benignTestingData = load_dataset("l2-benign_testing.csv", 0)
 maliciousTestingData = load_dataset("l2-malicious_testing.csv", 1)
 
+#Combine the malicious/benign sets together
 combinedTrainingData = pd.concat([benignTrainingData, maliciousTrainingData])
 combinedTestingData = pd.concat([benignTestingData, maliciousTestingData])
 
@@ -27,11 +32,14 @@ y_train = combinedTrainingData['label']
 X_test = combinedTestingData.drop(columns=['label'])
 y_test = combinedTestingData['label']
 
+#Make the NB model
 gnb_model = GaussianNB()
 gnb_model.fit(X_train, y_train)
 
+#Run it
 y_prediction = gnb_model.predict(X_test)
 
+#Get analytics from sklearn
 confusionMatrix = confusion_matrix(y_test, y_prediction)
 confusionMatrixDF = pd.DataFrame(confusionMatrix, index=["Actual Benign", "Actual Malicious"], columns=["Predicted Benign", "Predicted Malicious"])
 accuracy = accuracy_score(y_test, y_prediction)
