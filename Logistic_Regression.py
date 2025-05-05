@@ -1,4 +1,5 @@
 import pandas as pd
+import time
 from sklearn.metrics import accuracy_score, recall_score, precision_score, confusion_matrix, f1_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import shuffle
@@ -37,19 +38,23 @@ def format_data(benign, benignTest, Malicious, MaliciousTest):
     X_test_scaled = scaler.transform(X_test_shuffled)
 
     return X_train_scaled, y_train_shuffled, X_test_scaled, y_test_shuffled
+    #return X_train_shuffled, y_train_shuffled, X_test_shuffled, y_test_shuffled
 
 def main():
     X_train, y_train, X_test, y_test = format_data("l2-benign_training.csv", "l2-malicious_training.csv", "l2-benign_testing.csv", "l2-malicious_testing.csv")
 
     log_reg = LogisticRegression(max_iter=10000)
+    start = time.perf_counter()
     log_reg.fit(X_train, y_train)
+    end = time.perf_counter()
 
     pred = log_reg.predict(X_test)
+    
 
     acc = accuracy_score(y_test, pred)
     recall = recall_score(y_test, pred)
     precision = precision_score(y_test, pred)
-    f1Score = f1_score(y_test, pred)
+    f1score = f1_score(y_test, pred)
 
     confusionMatrix = confusion_matrix(y_test, pred)
     confusionMatrixDF = pd.DataFrame(confusionMatrix, index=["Actual Benign", "Actual Malicious"], columns=["Predicted Benign", "Predicted Malicious"])
@@ -57,7 +62,7 @@ def main():
     print (f"Accuracy: {acc}")
     print (f"Recall: {recall}")
     print (f"Precision: {precision}")
+    print (f"F-1 Score:  {f1score}")
     print("Confusion Matrix" +str(confusionMatrixDF))
-    print("F1 Score: " + str(f1Score))
 
 main()
